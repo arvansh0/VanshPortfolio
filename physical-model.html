@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physical Modeling - VANSH PORTFOLIO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+    <style>
+        .model-hero {
+            height: 40vh;
+            background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)), url('images/city-5642060_1280.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .model-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-section {
+            margin-bottom: 40px;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .video-item {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 30px auto;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-item video {
+            width: 100%;
+            height: auto;
+            max-height: 450px;
+            object-fit: contain;
+            background: #f5f5f5;
+        }
+
+        .video-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 3rem;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .gallery-section {
+            padding: 50px 0;
+            background-color: #F5F6FA;
+        }
+
+        .gallery-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .gallery-grid {
+            columns: 3;
+            column-gap: 20px;
+        }
+
+        .gallery-item {
+            break-inside: avoid;
+            margin-bottom: 20px;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: white;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: all 0.3s ease;
+            object-fit: contain;
+            background: #f5f5f5;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .gallery-item:hover img {
+            filter: brightness(1.05);
+        }
+
+        .gallery-item-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            color: white;
+            padding: 30px 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+
+        .gallery-item:hover .gallery-item-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gallery-item-overlay h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0 0 8px 0;
+        }
+
+        .gallery-item-overlay p {
+            font-size: 0.9rem;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #FFFFFF;
+            font-size: 2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Lightbox styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90vh;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-content img,
+        .lightbox-content video {
+            max-width: 85%;
+            max-height: 85vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 4px;
+            background: #f5f5f5;
+        }
+
+        .close-lightbox {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 35px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            z-index: 1002;
+        }
+
+        .close-lightbox:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            z-index: 1002;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-nav:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .prev-image {
+            left: 20px;
+        }
+
+        .next-image {
+            right: 20px;
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1002;
+        }
+
+        .video-control-btn {
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .video-control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Preview thumbnails container with arrows */
+        .preview-thumbnails-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1003;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 15px;
+            border-radius: 10px;
+            max-width: 70vw;
+        }
+
+        .preview-thumbnails {
+            display: flex;
+            gap: 8px;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            max-width: calc(100% - 80px);
+        }
+
+        .preview-thumbnail {
+            width: 50px;
+            height: 50px;
+            flex-shrink: 0;
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        /* Preview navigation arrows */
+        .preview-nav {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            font-size: 14px;
+        }
+
+        .preview-nav:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .preview-nav.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .gallery-grid {
+                columns: 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .gallery-grid {
+                columns: 1;
+            }
+            .model-hero h1 {
+                font-size: 2.5rem;
+            }
+            .video-item video {
+                max-height: 350px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .gallery-container {
+                padding: 15px;
+            }
+
+            .gallery-item img {
+                max-height: 200px;
+            }
+
+            .video-item video {
+                max-height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="nav-links left">
+                <li><a href="index.html">Work</a></li>
+                <li><a href="skills.html">Skills</a></li>
+                <li><a href="experience.html">Experience</a></li>
+                <li><a href="awards.html">Awards</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </nav>
+        <div class="logo">VANSH PORTFOLIO</div>
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/vansh-angiras-828275350" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://www.instagram.com/vansh_world" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="VANSH CV.png" download class="cv-button">
+                <i class="fas fa-download"></i>CV
+            </a>
+            <a href="contact.html" class="contact-button">
+                <i class="fas fa-envelope"></i>Contact
+            </a>
+        </div>
+        <div class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <section class="model-hero">
+        <h1>Physical Modeling</h1>
+    </section>
+
+    <div class="gallery-container">
+        <!-- Videos Section -->
+        <h2 class="section-title">Featured Videos</h2>
+        <div class="video-grid">
+            <div class="video-item" data-type="video" data-src="SKILLS WORK/PHYSICAL MODELING/SHIVAYA.mp4">
+                <video autoplay loop muted playsinline>
+                    <source src="SKILLS WORK/PHYSICAL MODELING/SHIVAYA.mp4" type="video/mp4">
+                </video>
+                <div class="video-indicator"><i class="fas fa-play-circle"></i></div>
+                <div class="gallery-item-overlay">Physical Model Showcase</div>
+            </div>
+        </div>
+
+        <!-- Images Section -->
+        <h2 class="section-title" style="color: #2C3E50;">Gallery</h2>
+        <div class="gallery-grid">
+            <a href="SKILLS WORK/PHYSICAL MODELING/DSC08625.png" class="gallery-item" data-type="image">
+                <img src="SKILLS WORK/PHYSICAL MODELING/DSC08625.png" alt="Architectural Model Detail">
+                <div class="gallery-item-overlay">
+                    <h3>Architectural Detail Study</h3>
+                    <p>Exploring structural elements through physical modeling</p>
+                </div>
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/DSC08627.png" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/DSC08627.png" alt="Scale Model Overview">
+                <div class="gallery-item-overlay">
+                    <h3>Scale Model Overview</h3>
+                    <p>Comprehensive view of architectural concept</p>
+                </div>
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/DSC08569.png" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/DSC08569.png" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/DSC08591.png" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/DSC08591.png" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/DSC08568.png" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/DSC08568.png" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/WERTYHJK.png" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/WERTYHJK.png" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/222.png" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/222.png" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/23.png" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/23.png" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/22.png" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/22.png" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/3.png" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/3.png" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/2.png" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/2.png" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/1.png" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/1.png" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/4.jpg" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/4.jpg" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/5.jpg" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/5.jpg" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/6.jpg" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/6.jpg" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/17.jpg" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/17.jpg" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/IMG_20230921_131700.jpg" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/IMG_20230921_131700.jpg" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/13.jpg" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/13.jpg" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/15.jpg" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/15.jpg" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/16.jpg" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/16.jpg" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/12.jpg" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/12.jpg" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/11.jpg" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/11.jpg" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/10.jpg" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/10.jpg" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/9.jpg" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/9.jpg" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/7.jpg" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/7.jpg" alt="Physical Model">
+            </a>
+            <a href="SKILLS WORK/PHYSICAL MODELING/8.jpg" class="gallery-item" data-lightbox="models">
+                <img src="SKILLS WORK/PHYSICAL MODELING/8.jpg" alt="Physical Model">
+            </a>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox">
+        <span class="close-lightbox">&times;</span>
+        <div class="lightbox-nav prev-image"><i class="fas fa-chevron-left"></i></div>
+        <div class="lightbox-nav next-image"><i class="fas fa-chevron-right"></i></div>
+        <div class="lightbox-content">
+            <!-- Content will be dynamically inserted here -->
+        </div>
+        <div class="video-controls" style="display: none;">
+            <span class="video-control-btn play-pause"><i class="fas fa-play"></i></span>
+            <span class="video-control-btn mute-unmute"><i class="fas fa-volume-up"></i></span>
+        </div>
+        <div class="preview-thumbnails-container" style="display: none;">
+            <div class="preview-nav prev-thumb"><i class="fas fa-chevron-left"></i></div>
+            <div class="preview-thumbnails">
+                <!-- Thumbnails will be dynamically added here -->
+            </div>
+            <div class="preview-nav next-thumb"><i class="fas fa-chevron-right"></i></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <span id="year"></span> VANSH PORTFOLIO</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+    <script>
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Lightbox functionality with navigation
+        const galleryItems = document.querySelectorAll('.gallery-item, .video-item');
+        const lightbox = document.querySelector('.lightbox');
+        const lightboxContent = lightbox.querySelector('.lightbox-content');
+        const closeLightbox = document.querySelector('.close-lightbox');
+        const prevButton = document.querySelector('.prev-image');
+        const nextButton = document.querySelector('.next-image');
+        const videoControls = document.querySelector('.video-controls');
+        const playPauseBtn = document.querySelector('.play-pause');
+        const muteUnmuteBtn = document.querySelector('.mute-unmute');
+        let currentIndex = 0;
+        let currentMedia = null;
+
+        function showMedia(index) {
+            currentIndex = index;
+            const item = galleryItems[index];
+            const type = item.getAttribute('data-type');
+            lightboxContent.innerHTML = '';
+            videoControls.style.display = 'none';
+
+            if (type === 'image') {
+                const img = document.createElement('img');
+                img.src = item.href || item.querySelector('img').src;
+                img.alt = item.querySelector('img').alt;
+                lightboxContent.appendChild(img);
+                currentMedia = img;
+            } else if (type === 'video') {
+                const video = document.createElement('video');
+                video.src = item.getAttribute('data-src');
+                video.controls = false;
+                video.autoplay = true;
+                video.loop = true;
+                lightboxContent.appendChild(video);
+                currentMedia = video;
+                videoControls.style.display = 'flex';
+                updatePlayPauseButton();
+                updateMuteButton();
+            }
+        }
+
+        galleryItems.forEach((item, index) => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMedia(index);
+                lightbox.classList.add('active');
+            });
+        });
+
+        prevButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+            showMedia(currentIndex);
+        });
+
+        nextButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentIndex = (currentIndex + 1) % galleryItems.length;
+            showMedia(currentIndex);
+        });
+
+        function updatePlayPauseButton() {
+            if (currentMedia && currentMedia.tagName === 'VIDEO') {
+                playPauseBtn.innerHTML = currentMedia.paused ? 
+                    '<i class="fas fa-play"></i>' : 
+                    '<i class="fas fa-pause"></i>';
+            }
+        }
+
+        function updateMuteButton() {
+            if (currentMedia && currentMedia.tagName === 'VIDEO') {
+                muteUnmuteBtn.innerHTML = currentMedia.muted ? 
+                    '<i class="fas fa-volume-mute"></i>' : 
+                    '<i class="fas fa-volume-up"></i>';
+            }
+        }
+
+        playPauseBtn.addEventListener('click', () => {
+            if (currentMedia && currentMedia.tagName === 'VIDEO') {
+                if (currentMedia.paused) {
+                    currentMedia.play();
+                } else {
+                    currentMedia.pause();
+                }
+                updatePlayPauseButton();
+            }
+        });
+
+        muteUnmuteBtn.addEventListener('click', () => {
+            if (currentMedia && currentMedia.tagName === 'VIDEO') {
+                currentMedia.muted = !currentMedia.muted;
+                updateMuteButton();
+            }
+        });
+
+        closeLightbox.addEventListener('click', () => {
+            if (currentMedia && currentMedia.tagName === 'VIDEO') {
+                currentMedia.pause();
+            }
+            lightbox.classList.remove('active');
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                if (currentMedia && currentMedia.tagName === 'VIDEO') {
+                    currentMedia.pause();
+                }
+                lightbox.classList.remove('active');
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('active')) return;
+            
+            if (e.key === 'ArrowLeft') {
+                currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+                showMedia(currentIndex);
+            } else if (e.key === 'ArrowRight') {
+                currentIndex = (currentIndex + 1) % galleryItems.length;
+                showMedia(currentIndex);
+            } else if (e.key === 'Escape') {
+                if (currentMedia && currentMedia.tagName === 'VIDEO') {
+                    currentMedia.pause();
+                }
+                lightbox.classList.remove('active');
+            } else if (e.key === ' ' && currentMedia && currentMedia.tagName === 'VIDEO') {
+                e.preventDefault();
+                if (currentMedia.paused) {
+                    currentMedia.play();
+                } else {
+                    currentMedia.pause();
+                }
+                updatePlayPauseButton();
+            }
+        });
+
+        // Add Intersection Observer for video autoplay
+        const videoElements = document.querySelectorAll('.video-item video');
+        const options = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.play();
+                } else {
+                    entry.target.pause();
+                }
+            });
+        }, options);
+
+        videoElements.forEach(video => {
+            observer.observe(video);
+        });
+
+        // Add this after the existing script
+        const previewContainer = document.querySelector('.preview-thumbnails-container');
+        const previewScroll = document.querySelector('.preview-thumbnails');
+        const prevThumb = document.querySelector('.prev-thumb');
+        const nextThumb = document.querySelector('.next-thumb');
+        
+        // Function to scroll preview thumbnails
+        function scrollPreviews(direction) {
+            const scrollAmount = 60; // Width of thumbnail + gap
+            const currentScroll = previewScroll.scrollLeft;
+            const newScroll = direction === 'left' ? 
+                currentScroll - scrollAmount : 
+                currentScroll + scrollAmount;
+            
+            previewScroll.scrollTo({
+                left: newScroll,
+                behavior: 'smooth'
+            });
+
+            // Update arrow states
+            updateArrowStates();
+        }
+
+        // Function to update arrow states
+        function updateArrowStates() {
+            const isAtStart = previewScroll.scrollLeft <= 0;
+            const isAtEnd = previewScroll.scrollLeft >= 
+                (previewScroll.scrollWidth - previewScroll.clientWidth);
+
+            prevThumb.classList.toggle('disabled', isAtStart);
+            nextThumb.classList.toggle('disabled', isAtEnd);
+        }
+
+        // Event listeners for preview navigation
+        prevThumb.addEventListener('click', () => {
+            if (!prevThumb.classList.contains('disabled')) {
+                scrollPreviews('left');
+            }
+        });
+
+        nextThumb.addEventListener('click', () => {
+            if (!nextThumb.classList.contains('disabled')) {
+                scrollPreviews('right');
+            }
+        });
+
+        // Update showMedia function
+        const originalShowMedia = showMedia;
+        showMedia = function(index) {
+            originalShowMedia(index);
+            if (!document.querySelector('.preview-thumbnails').children.length) {
+                createThumbnails();
+            } else {
+                updateThumbnails();
+            }
+            previewContainer.style.display = 'flex';
+            updateArrowStates();
+        };
+
+        // Update closeLightbox handling
+        const originalCloseLightbox = closeLightbox.onclick;
+        closeLightbox.onclick = function() {
+            if (originalCloseLightbox) originalCloseLightbox();
+            previewContainer.style.display = 'none';
+        };
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                previewContainer.style.display = 'none';
+            }
+        });
+
+        // Add scroll event listener to update arrow states
+        previewScroll.addEventListener('scroll', updateArrowStates);
+        
+        // Initialize arrow states when thumbnails are created
+        function createThumbnails() {
+            previewScroll.innerHTML = '';
+            galleryItems.forEach((item, index) => {
+                const thumb = document.createElement('div');
+                thumb.className = 'preview-thumbnail';
+                if (index === currentIndex) thumb.classList.add('active');
+                
+                const img = document.createElement('img');
+                img.src = item.href || item.querySelector('img').src;
+                img.alt = 'Thumbnail';
+                
+                thumb.appendChild(img);
+                thumb.addEventListener('click', () => {
+                    showMedia(index);
+                    updateThumbnails();
+                });
+                
+                previewScroll.appendChild(thumb);
+            });
+            updateArrowStates();
+        }
+    </script>
+</body>
+</html> 
